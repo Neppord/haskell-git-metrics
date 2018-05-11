@@ -25,8 +25,10 @@ main = shakeArgs shakeOptions{shakeFiles="_git-metrics"} $ do
     phony "clean" $ do
         putNormal "Cleaning files in _git-metrics"
         removeFilesAfter "_git-metrics" ["//*"]
-
+    ".git/HEAD" %> \out -> do
+        fail "You seam to not be at the root of a git repo"
     "_git-metrics/report.svg" %> \out -> do
+        need [".git/HEAD"]
         writeFileChanged out $ renderSvg svgDoc
         
         
